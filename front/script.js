@@ -21,9 +21,13 @@ async function carregarTarefas() {
             <span class="texto-tarefa">${tarefa.titulo}</span>
             <div class="acoes">
                 <button class="btn-check" onclick="alterarStatus(${tarefa.id}, '${tarefa.titulo}', ${tarefa.concluido})">
-                    ${tarefa.concluido ? 'Desfazer' : 'Concluir'}
+                    <i class="fas fa-check"></i> ${tarefa.concluido ? 'Desfazer' : 'Concluir'}
                 </button>
                 
+                <button class="btn-edit" style="background-color: #17a2b8; color: white;" onclick="editarTexto(${tarefa.id}, '${tarefa.titulo}', ${tarefa.concluido})">
+                    Editar
+                </button>
+
                 <button class="btn-delete" onclick="deletarTarefa(${tarefa.id})">
                     Excluir
                 </button>
@@ -76,6 +80,27 @@ async function alterarStatus(id, tituloAtual, statusAtual) {
     });
 
     carregarTarefas(); // Recarrega a lista com o novo visual
+}
+
+// --- 5. EDITAR TEXTO (Update Real) ---
+async function editarTexto(id, tituloAtual, statusAtual) {
+    // Abre uma janelinha perguntando o novo nome
+    const novoTitulo = prompt("Qual o novo nome da tarefa?", tituloAtual);
+
+    // Se o usuário cancelou ou deixou vazio, não faz nada
+    if (!novoTitulo || novoTitulo === tituloAtual) return;
+
+    // Envia para o Backend
+    await fetch(`${API_URL}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+            titulo: novoTitulo,     // Manda o NOVO título
+            concluido: statusAtual  // Mantém o status que já estava
+        })
+    });
+
+    carregarTarefas(); // Atualiza a tela
 }
 
 // Carrega tudo assim que o script roda
