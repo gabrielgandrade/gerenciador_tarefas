@@ -36,5 +36,4 @@ Pré-requisitos
 
 Clone o repositório
 ```bash
-git clone [https://github.com/SEU_USUARIO/NOME_DO_REPO.git](https://github.com/SEU_USUARIO/NOME_DO_REPO.git)
-cd gerenciador_tarefas
+git clone [https://github.com/gabrielgandrade/gerenciador_tarefas.git]
