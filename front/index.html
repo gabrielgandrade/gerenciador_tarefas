@@ -3,48 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de Tarefas CRUD</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; padding-top: 50px; }
-        .container { width: 100%; max-width: 500px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        h1 { text-align: center; color: #333; margin-bottom: 20px; }
-        
-        /* Área de input */
-        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 5px; outline: none; }
-        button.add-btn { padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        button.add-btn:hover { background-color: #218838; }
+    <title>Minha Library</title>
+    
+    <link rel="stylesheet" href="./css/style.css?v=2">
 
-        /* Lista de tarefas */
-        ul { list-style: none; padding: 0; }
-        li { background: #fff; border-bottom: 1px solid #eee; padding: 15px; display: flex; justify-content: space-between; align-items: center; transition: all 0.2s; }
-        li:hover { background-color: #fafafa; }
-        
-        /* Texto da tarefa */
-        .texto-tarefa { flex: 1; font-size: 16px; cursor: pointer; }
-        .concluido .texto-tarefa { text-decoration: line-through; color: #888; }
-
-        /* Botões de ação (Lixo e Check) */
-        .acoes button { margin-left: 5px; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; }
-        .btn-delete { background-color: #dc3545; color: white; }
-        .btn-check { background-color: #ffc107; color: black; }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    
+    <link rel="icon" href="data:,">
 </head>
 <body>
 
-    <div class="container">
-        <h1>Minha Lista</h1>
+    <div id="app-header"></div>
 
+    <main>
         <div class="input-group">
             <input type="text" id="nova-tarefa" placeholder="Adicionar nova tarefa...">
-            <button class="add-btn" onclick="adicionarTarefa()">Adicionar</button>
+            <button onclick="adicionarTarefa()">Adicionar</button>
         </div>
 
         <ul id="lista-tarefas">
             </ul>
-    </div>
+    </main>
 
-    <script src="script.js"></script>
+    <div id="app-footer"></div>
 
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

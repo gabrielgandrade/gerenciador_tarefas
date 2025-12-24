@@ -1,5 +1,6 @@
-#importados
+# importados
 import psycopg2
+import os
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 
@@ -8,31 +9,41 @@ CORS(app)
 
 
 
-# banco de dados
-DB_HOST = "localhost"
-DB_NAME = "gerenciador_tarefas"
-DB_USER = "postgres"
-DB_PASS = "10jackCRIL" 
 
+# BANCO DE DADOS
+
+# Ela decide sozinha se usa a senha do seu PC ou da Nuvem
 def get_db_connection():
-    conn = psycopg2.connect(
-        host=DB_HOST,
-        database=DB_NAME,
-        user=DB_USER,
-        password=DB_PASS
-    )
+    # 1. Tenta pegar o endereço do banco da Nuvem
+    url_nuvem = os.getenv("DATABASE_URL")
+
+    if url_nuvem:
+        # --- ESTAMOS NA NUVEM (RENDER) ---
+        if url_nuvem.startswith("postgres://"):
+            url_nuvem = url_nuvem.replace("postgres://", "postgresql://", 1)
+        
+        conn = psycopg2.connect(url_nuvem)
+    
+    else:
+        # --- ESTAMOS NO SEU PC (LOCAL) ---
+        conn = psycopg2.connect(
+            host="localhost",
+            database="gerenciador_tarefas",
+            user="postgres",
+            password="10jackCRIL"
+        )
+    
     return conn
 
 
 
-
-
+# --- ROTAS ---
 
 # ROTA - CRIAR 
 @app.route('/tarefas', methods=['POST'])
 def criar_tarefa():
     try:
-        dados = request.get_json() # Agora podemos usar o padrão do Flask!
+        dados = request.get_json()
         titulo_tarefa = dados['titulo']
 
         conn = get_db_connection()
@@ -51,8 +62,6 @@ def criar_tarefa():
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
-
-
 # ROTA - LER
 @app.route('/tarefas', methods=['GET'])
 def listar_tarefas():
@@ -60,7 +69,6 @@ def listar_tarefas():
         conn = get_db_connection()
         cur = conn.cursor()
         
-        # Pega todas as tarefas ordenadas pelo ID
         cur.execute("SELECT * FROM tarefas ORDER BY id ASC;")
         tarefas = cur.fetchall()
         
@@ -78,26 +86,18 @@ def listar_tarefas():
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
-
-
 # ROTA - ATUALIZAR 
 @app.route('/tarefas/<int:id>', methods=['PUT'])
 def atualizar_tarefa(id):
     try:
-        # 1. Pegar os dados que o usuário quer mudar
         dados = request.get_json()
         novo_titulo = dados['titulo']
-        novo_status = dados['concluido'] # True ou False
+        novo_status = dados['concluido']
 
-        # 2. Conectar
         conn = get_db_connection()
         cur = conn.cursor()
 
-        # 3. O Comando SQL (Update)
-        # "Atualize a tabela tarefas, definindo titulo = X e concluido = Y, 
-        # MAS APENAS ONDE o id for igual ao ID da URL"
         sql = "UPDATE tarefas SET titulo = %s, concluido = %s WHERE id = %s"
-        
         cur.execute(sql, (novo_titulo, novo_status, id))
         
         conn.commit()
@@ -116,10 +116,7 @@ def deletar_tarefa(id):
         conn = get_db_connection()
         cur = conn.cursor()
 
-        # O Comando Fatal
-        # "Apague da tabela tarefas ONDE o id for igual ao ID da URL"
         sql = "DELETE FROM tarefas WHERE id = %s"
-        
         cur.execute(sql, (id,))
         
         conn.commit()
@@ -135,6 +132,3 @@ def deletar_tarefa(id):
 if __name__ == '__main__':
     app.json.ensure_ascii = False 
     app.run(debug=True)
-
-
-
