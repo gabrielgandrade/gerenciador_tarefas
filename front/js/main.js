@@ -1,7 +1,7 @@
 // 1. Importa os componentes
 import { Header } from '../components/header.js';
 import { Footer } from '../components/footer.js';
-import { Filters } from '../components/filters.js'; // <--- Importamos o novo componente
+import { Filters } from '../components/filters.js'; 
 
 // 2. Renderiza a estrutura visual
 document.getElementById('app-header').innerHTML = Header();
@@ -12,11 +12,20 @@ const lista = document.getElementById('lista-tarefas');
 lista.insertAdjacentHTML('beforebegin', Filters());
 
 // ---------------------------------------------------------
-// 3. Lógica do Sistema (O Motor V8)
+// 3. Lógica do Sistema 
 // ---------------------------------------------------------
 
-const API_URL = 'http://127.0.0.1:5000/tarefas';
-let filtroAtual = 'todas'; // Memória do filtro
+// Verifica se estamos rodando no computador (localhost) ou na nuvem
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+// Se for localhost, usa a porta 5000 do Python. Se não, usa o link da Nuvem.
+const API_URL = isLocalhost 
+    ? 'http://127.0.0.1:5000/tarefas' 
+    : 'https://gerenciador-tarefas-i9w3.onrender.com/tarefas';
+
+// ESTADO GLOBAL DO FILTRO
+let filtroAtual = 'todos';
+
 
 // --- FUNÇÃO: CARREGAR (READ) ---
 window.carregarTarefas = async function() {
