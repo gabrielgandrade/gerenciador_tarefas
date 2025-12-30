@@ -21,7 +21,7 @@ const isLocalhost = window.location.hostname === 'localhost' || window.location.
 // Se for localhost, usa a porta 5000 do Python. Se não, usa o link da Nuvem.
 const API_URL = isLocalhost 
     ? 'http://127.0.0.1:5000/tarefas' 
-    : 'https://gerenciador-tarefas-i9w3.onrender.com/tarefas';
+    : 'https://api-tarefas-c62u.onrender.com/tarefas';
 
 // ESTADO GLOBAL DO FILTRO
 let filtroAtual = 'todos';
